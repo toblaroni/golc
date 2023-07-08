@@ -11,74 +11,126 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define WIDTH  10
+#define HEIGHT 10
 
-const int width  = 10;
-const int height = 10;
 const char ALIVE = '0';
 const char DEAD  = '.';
 
-char pState[10][10] = {};
-char cState[10][10] = { {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'},
-                        {'.', '0', '0', '.', '.', '0', '.', '.', '.', '.'},
-                        {'.', '0', '0', '.', '.', '0', '.', '.', '.', '.'},
-                        {'.', '.', '.', '.', '.', '0', '.', '.', '.', '.'},
-                        {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'},
-                        {'.', '0', '.', '.', '.', '.', '.', '.', '.', '.'},
-                        {'0', '.', '0', '.', '.', '.', '.', '.', '.', '.'},
-                        {'.', '0', '.', '.', '.', '.', '.', '.', '.', '.'},
-                        {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'},
-                        {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'} };
 
+
+char pState[][] = {};
+char cState[][];
 
 void showGame();
 void updateGame();
 int numNeighbours(int i, int j);
+void makeRandomGame(int w, int h);
 
 int main(void) {
-   updateGame();
-   showGame();
+   while(1) {
+      updateGame();
+      showGame();
+   }
 }
 
 
 void updateGame() {
    // Set the previous state to be the current state.
-   for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
+   for (int i = 0; i < HEIGHT; i++) {
+      for (int j = 0; j < WIDTH; j++) {
          pState[i][j] = cState[i][j];
       }
    }
 
-   for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
+   for (int i = 0; i < HEIGHT; i++) {
+      for (int j = 0; j < WIDTH; j++) {
+         int neighbours = numNeighbours(i, j);
+         // printf("Cell at %i, %i has %i neighbours\n", i, j, neighbours);
+         if (pState[i][j] == ALIVE && (neighbours == 2 || neighbours == 3)) 
+            pState[i][j] = ALIVE;
+         else if (pState[i][j] == DEAD && neighbours == 3)
+            pState[i][j] = ALIVE;
+         else
+            pState[i][j] = DEAD;
 
       }
    }
-
-
 }
 
 void showGame() {
-   for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-         printf("%c ", pState[i][j]);
+   for (int i = 0; i < HEIGHT; i++) {
+      for (int j = 0; j < WIDTH; j++) {
+         putchar(pState[i][j]);
       }
       printf("\n");
    }
+   printf("\n");
 }
+
+
+void makeRandomGame(int w, int h) {
+   srand(time(NULL));
+   
+   for (int i = 0; i < 
+}
+
 
 int numNeighbours(int i, int j) {
    int count = 0;
 
    // Edge cases
-   if (i == 0 && j == 0) {
+   if (i == 0 && j == 0) { // top left
+      if (pState[i+1][j] == ALIVE) count++;
+      if (pState[i][j+1] == ALIVE) count++;
+      return count;
 
-   } else if (i == height - 1 && j == width - 1) {
+   } else if (i == HEIGHT - 1 && j == WIDTH - 1) { // Bottom right
+      if (pState[i-1][j] == ALIVE) count++;
+      if (pState[i][j-1] == ALIVE) count++;
+      return count;
 
-   } else if (i == 0 && j == width - 1) {
+   } else if (i == 0 && j == WIDTH - 1) { // bottom left
+      if (pState[i+1][j] == ALIVE) count++;
+      if (pState[i][j-1] == ALIVE) count++;
+      return count;
 
-   } else if (i == height - 1 && j == 0) {
+   } else if (i == HEIGHT - 1 && j == 0) { // top right
+      if (pState[i-1][j] == ALIVE) count++;
+      if (pState[i][j+1] == ALIVE) count++;
+      return count;
 
+   } else if (i == 0) { // Top row
+      if (pState[i+1][j] == ALIVE) count++;
+      if (pState[i][j+1] == ALIVE) count++;
+      if (pState[i][j-1] == ALIVE) count++;
+      return count;
+
+   } else if (i == HEIGHT -1) { 
+      if (pState[i-1][j] == ALIVE) count++;
+      if (pState[i][j+1] == ALIVE) count++;
+      if (pState[i][j-1] == ALIVE) count++;
+      return count;
+
+   } else if (j == 0) {
+      if (pState[i-1][j] == ALIVE) count++;
+      if (pState[i+1][j] == ALIVE) count++;
+      if (pState[i][j+1] == ALIVE) count++;
+      return count;
+
+   } else if (j == WIDTH - 1) {
+      if (pState[i-1][j] == ALIVE) count++;
+      if (pState[i+1][j] == ALIVE) count++;
+      if (pState[i][j-1] == ALIVE) count++;
+      return count;
    }
+
+   if (pState[i+1][j] == ALIVE) count ++;
+   if (pState[i-1][j] == ALIVE) count ++;
+   if (pState[i][j+1] == ALIVE) count ++;
+   if (pState[i][j-1] == ALIVE) count ++;
 
    return count;
 }
