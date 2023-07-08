@@ -21,18 +21,41 @@ const char DEAD  = '.';
 
 
 
-char pState[][] = {};
-char cState[][];
+char pState[HEIGHT][WIDTH] = {};
+/* char cState[HEIGHT][WIDTH] = { {'0', '0', '0', '0', '0'},
+                               {'0', '0', '0', '0', '0'},
+                               {'0', '0', '0', '0', '0'},
+                               {'0', '0', '0', '0', '0'},
+                               {'0', '0', '0', '0', '0'} };
+
+                               */
+
+char cState[HEIGHT][WIDTH] = { {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                              {'.', '0', '0', '.', '.', '0', '.', '.', '.', '.'},
+                              {'.', '0', '0', '.', '.', '0', '.', '.', '.', '.'},
+                              {'.', '.', '.', '.', '.', '0', '.', '.', '.', '.'},
+                              {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                              {'0', '.', '0', '.', '.', '.', '.', '.', '.', '.'},
+                              {'.', '0', '.', '.', '.', '.', '.', '.', '.', '.'},
+                              {'.', '0', '.', '.', '.', '.', '.', '.', '.', '.'},
+                              {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'},
+                              {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'} };
 
 void showGame();
 void updateGame();
 int numNeighbours(int i, int j);
-void makeRandomGame(int w, int h);
+void makeRandomGame();
 
 int main(void) {
-   while(1) {
-      updateGame();
-      showGame();
+   char in; 
+   makeRandomGame();
+   showGame();
+   while (1) {
+      scanf("%c", &in);
+      if (in == '\n') {
+         updateGame();
+         showGame();
+      }
    }
 }
 
@@ -50,11 +73,11 @@ void updateGame() {
          int neighbours = numNeighbours(i, j);
          // printf("Cell at %i, %i has %i neighbours\n", i, j, neighbours);
          if (pState[i][j] == ALIVE && (neighbours == 2 || neighbours == 3)) 
-            pState[i][j] = ALIVE;
+            cState[i][j] = ALIVE;
          else if (pState[i][j] == DEAD && neighbours == 3)
-            pState[i][j] = ALIVE;
+            cState[i][j] = ALIVE;
          else
-            pState[i][j] = DEAD;
+            cState[i][j] = DEAD;
 
       }
    }
@@ -63,18 +86,24 @@ void updateGame() {
 void showGame() {
    for (int i = 0; i < HEIGHT; i++) {
       for (int j = 0; j < WIDTH; j++) {
-         putchar(pState[i][j]);
+         fputc(cState[i][j], stdout);
       }
-      printf("\n");
+      fputc('\n', stdout);
    }
-   printf("\n");
 }
 
 
-void makeRandomGame(int w, int h) {
+void makeRandomGame() {
    srand(time(NULL));
+   float r;
    
-   for (int i = 0; i < 
+   for (int i = 0; i < HEIGHT; i++) {
+      for (int j = 0; j < WIDTH; j++) {
+         r = (float) rand() / RAND_MAX;
+         if (r > 0.5) cState[i][j] = ALIVE;
+         else  cState[i][j] = DEAD;
+      }
+   }
 }
 
 
