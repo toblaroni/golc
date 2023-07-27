@@ -16,7 +16,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define WIDTH  100
+#define WIDTH  50
 #define HEIGHT WIDTH 
 
 const char ALIVE = '0';
@@ -86,11 +86,10 @@ void showGame() {
    system("clear");
    for (int i = 0; i < HEIGHT; i++) {
       for (int j = 0; j < WIDTH; j++) {
-         printf("%c", cState[i][j]);
+         printf("%c ", cState[i][j]);
       }
       printf("\n");
    }
-   system("sleep 0.5");
 }
 
 
